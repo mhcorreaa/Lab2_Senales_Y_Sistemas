@@ -9,7 +9,7 @@ fs = 1000  # frecuencia de muestreo (Hz)
 t = np.arange(-2, 2, 1/fs)  # vector de tiempo de -2 a 2 segundos
 
 # frecuencia fundamental para las senales periodicas
-frec = 2  # Hz
+frec = 2  
 
 # creacion del conjunto de senales periodicas
 senoidal = np.sin(2 * np.pi * frec * t)
@@ -59,4 +59,3 @@ sinc_senal = np.zeros_like(t)
 indices_no_cero = (t != 0)
 sinc_senal[indices_no_cero] = np.sin(t[indices_no_cero]) / t[indices_no_cero]
 sinc_senal[t == 0] = 1
-
