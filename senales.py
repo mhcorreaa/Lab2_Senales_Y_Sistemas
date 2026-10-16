@@ -2,9 +2,8 @@ import numpy as np
 from scipy import signal
 import matplotlib.pyplot as plt
 
-# 1. senales periodicas
+# 1 senales periodicas
 
-# parametros del vector de tiempo
 fs = 1000  # frecuencia de muestreo (Hz)
 t = np.arange(-2, 2, 1/fs)  # vector de tiempo de -2 a 2 segundos
 
@@ -17,7 +16,6 @@ cuadrada = signal.square(2 * np.pi * frec * t)
 triangular = signal.sawtooth(2 * np.pi * frec * t, width=0.5)
 diente_sierra = signal.sawtooth(2 * np.pi * frec * t, width=1)
 
-# visualizacion rapida para comprobar los arreglos
 fig, axs = plt.subplots(4, 1, figsize=(10, 8))
 axs[0].plot(t, senoidal)
 axs[0].set_title('Senoidal')
@@ -36,7 +34,7 @@ plt.tight_layout()
 
 #plt.show() #mostrar senales periodicas
 
-# 2. senales aperiodicas
+# 2 senales aperiodicas
     
 # se define la función escalon u(t) y la version desplazada u(t-1)
 u_t = np.heaviside(t, 1)
@@ -47,7 +45,7 @@ ventana = u_t - u_t_menos_1
 exp_decreciente = np.exp(-t) * ventana
 exp_creciente = np.exp(t) * ventana
 
-# delta de dirac discreto
+# delta de kronecker
 impulso = np.zeros_like(t)
 impulso[np.argmin(np.abs(t))] = 1
 
