@@ -1,7 +1,12 @@
 import numpy as np
 from scipy import signal
 import matplotlib.pyplot as plt
+from pathlib import Path
 
+# declarar path para guardar graficos en carpeta figuras
+
+carpeta_figuras = Path("figuras")
+carpeta_figuras.mkdir(exist_ok=True)
 
 # senales periodicas 
 
@@ -29,6 +34,11 @@ for ax in axs:
     ax.set_xlim(-1, 1) 
 
 plt.tight_layout()
+
+fig.savefig(
+    carpeta_figuras / "señales_periodicas.pdf",
+    bbox_inches="tight"
+)
 
 
 # senales aperiodicas 
@@ -69,6 +79,10 @@ for ax in axs2:
 
 plt.tight_layout()
 
+fig2.savefig(
+    carpeta_figuras / "senales_aperiodicas.pdf",
+    bbox_inches="tight"
+)
 
 # funciones auxiliares para métricas y gráficos
 
