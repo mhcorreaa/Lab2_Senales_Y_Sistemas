@@ -4,44 +4,48 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 
 # declarar path para guardar graficos en carpeta figuras
-
 carpeta_figuras = Path("figuras")
 carpeta_figuras.mkdir(exist_ok=True)
 
-# senales periodicas 
-
+# parámetros globales y funciones auxiliares
 fs = 1000  # frecuencia de muestreo (Hz)
 t = np.arange(-2, 2, 1/fs)  # vector de tiempo de -2 a 2 segundos
+dt = 1 / fs
 frec = 2  
+
+def calcular_energia_potencia(senal, dt_val):
+    energia = np.sum(np.abs(senal)**2) * dt_val
+    duracion = len(senal) * dt_val
+    potencia = energia / duracion if duracion > 0 else 0
+    return energia, potencia
+
+# --- 1. senales periodicas ---
 
 senoidal = np.sin(2 * np.pi * frec * t)
 cuadrada = signal.square(2 * np.pi * frec * t)
 triangular = signal.sawtooth(2 * np.pi * frec * t, width=0.5)
 diente_sierra = signal.sawtooth(2 * np.pi * frec * t, width=1)
 
-fig, axs = plt.subplots(4, 1, figsize=(10, 8))
-axs[0].plot(t, senoidal)
-axs[0].set_title('Senoidal')
-axs[1].plot(t, cuadrada)
-axs[1].set_title('Cuadrada')
-axs[2].plot(t, triangular)
-axs[2].set_title('Triangular')
-axs[3].plot(t, diente_sierra)
-axs[3].set_title('Diente de Sierra')
+senales_periodicas = {
+    'Senoidal': senoidal,
+    'Cuadrada': cuadrada,
+    'Triangular': triangular,
+    'Diente de Sierra': diente_sierra
+}
 
-for ax in axs:
-    ax.grid(True)
-    ax.set_xlim(-1, 1) 
+fig, axs = plt.subplots(4, 1, figsize=(10, 10))
+
+for i, (nombre, senal) in enumerate(senales_periodicas.items()):
+    E, P = calcular_energia_potencia(senal, dt)
+    axs[i].plot(t, senal)
+    axs[i].set_title(f'{nombre} | E={E:.4f}, P={P:.4f}')
+    axs[i].grid(True)
+    axs[i].set_xlim(-1, 1)
 
 plt.tight_layout()
+fig.savefig(carpeta_figuras / "señales_periodicas.pdf", bbox_inches="tight")
 
-fig.savefig(
-    carpeta_figuras / "señales_periodicas.pdf",
-    bbox_inches="tight"
-)
-
-
-# senales aperiodicas 
+# --- 2. senales aperiodicas ---
     
 u_t = np.heaviside(t, 1)
 u_t_menos_1 = np.heaviside(t - 1, 1)
@@ -49,40 +53,33 @@ ventana = u_t - u_t_menos_1
 
 exp_decreciente = np.exp(-t) * ventana
 exp_creciente = np.exp(t) * ventana
-
 impulso = np.zeros_like(t)
 impulso[np.argmin(np.abs(t))] = 1
-
 escalon = u_t
-
 sinc_senal = np.zeros_like(t)
 indices_no_cero = (t != 0)
 sinc_senal[indices_no_cero] = np.sin(t[indices_no_cero]) / t[indices_no_cero]
 sinc_senal[t == 0] = 1
 
-fig2, axs2 = plt.subplots(5, 1, figsize=(10, 10))
+respuestas_impulso = {
+    'Exp Decreciente': exp_decreciente,
+    'Exp Creciente': exp_creciente,
+    'Impulso': impulso,
+    'Escalon': escalon,
+    'Sinc': sinc_senal
+}
 
-axs2[0].plot(t, exp_decreciente)
-axs2[0].set_title('Exponencial Decreciente')
-axs2[1].plot(t, exp_creciente)
-axs2[1].set_title('Exponencial Creciente')
-axs2[2].plot(t, impulso)
-axs2[2].set_title('Impulso')
-axs2[3].plot(t, escalon)
-axs2[3].set_title('Escalon')
-axs2[4].plot(t, sinc_senal)
-axs2[4].set_title('Sinc')
+fig2, axs2 = plt.subplots(5, 1, figsize=(10, 12))
 
-for ax in axs2:
-    ax.grid(True)
-    ax.set_xlim(-2, 2) 
+for i, (nombre, senal) in enumerate(respuestas_impulso.items()):
+    E, P = calcular_energia_potencia(senal, dt)
+    axs2[i].plot(t, senal)
+    axs2[i].set_title(f'{nombre} | E={E:.4f}, P={P:.4f}')
+    axs2[i].grid(True)
+    axs2[i].set_xlim(-2, 2) 
 
 plt.tight_layout()
-
-fig2.savefig(
-    carpeta_figuras / "senales_aperiodicas.pdf",
-    bbox_inches="tight"
-)
+fig2.savefig(carpeta_figuras / "senales_aperiodicas.pdf", bbox_inches="tight")
 
 # funciones auxiliares para métricas y gráficos
 
