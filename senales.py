@@ -100,6 +100,7 @@ def visualizar_sistema(nombre_ent, senal_ent, nombre_ht, senal_ht, senal_sal, t_
     E_sal, P_sal = calcular_energia_potencia(senal_sal, dt)
 
     fig_sys, axs_sys = plt.subplots(3, 1, figsize=(10, 8))
+    # Se corrigió el error de salto de línea en el string
     fig_sys.suptitle(f'Sistema LTI: {nombre_ent} * {nombre_ht}', fontsize=12)
 
     axs_sys[0].plot(t_ent, senal_ent, color='blue')
@@ -115,6 +116,10 @@ def visualizar_sistema(nombre_ent, senal_ent, nombre_ht, senal_ht, senal_sal, t_
         ax.grid(True)
 
     plt.tight_layout()
+    
+    # Generar nombre de archivo dinámico limpiando los espacios
+    nombre_archivo = f"conv_{nombre_ent}_{nombre_ht}.pdf".replace(" ", "_")
+    fig_sys.savefig(carpeta_figuras / nombre_archivo, bbox_inches="tight")
 
 
 # convolucion de senales periodicas y aperiodicas 
