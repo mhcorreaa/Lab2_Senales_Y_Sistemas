@@ -21,7 +21,6 @@ def calcular_energia_potencia(senal, dt_val):
     potencia = energia / duracion if duracion > 0 else 0
     return energia, potencia
 
-
 def visualizar_sistema(nombre_ent, senal_ent, nombre_ht, senal_ht, senal_sal, t_ent, t_ht, t_sal):
     E_ent, P_ent = calcular_energia_potencia(senal_ent, dt)
     E_ht, P_ht = calcular_energia_potencia(senal_ht, dt)
