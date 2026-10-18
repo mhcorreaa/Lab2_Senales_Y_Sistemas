@@ -71,7 +71,7 @@ for i, (nombre, senal) in enumerate(senales_periodicas.items()):
     axs[i].set_xlim(-1, 1)
 
 plt.tight_layout()
-fig.savefig(carpeta_figuras / "señales_periodicas.pdf", bbox_inches="tight")
+fig.savefig(carpeta_figuras / "senales_periodicas.pdf", bbox_inches="tight")
 
 # senales aperiodicas
     
