@@ -13,11 +13,40 @@ t = np.arange(-2, 2, 1/fs)  # vector de tiempo de -2 a 2 segundos
 dt = 1 / fs
 frec = 2  
 
+# funciones auxiliares para metricas y graficos
+
 def calcular_energia_potencia(senal, dt_val):
     energia = np.sum(np.abs(senal)**2) * dt_val
     duracion = len(senal) * dt_val
     potencia = energia / duracion if duracion > 0 else 0
     return energia, potencia
+
+
+def visualizar_sistema(nombre_ent, senal_ent, nombre_ht, senal_ht, senal_sal, t_ent, t_ht, t_sal):
+    E_ent, P_ent = calcular_energia_potencia(senal_ent, dt)
+    E_ht, P_ht = calcular_energia_potencia(senal_ht, dt)
+    E_sal, P_sal = calcular_energia_potencia(senal_sal, dt)
+
+    fig_sys, axs_sys = plt.subplots(3, 1, figsize=(10, 8))
+   
+    fig_sys.suptitle(f'Sistema LTI: {nombre_ent} * {nombre_ht}', fontsize=12)
+
+    axs_sys[0].plot(t_ent, senal_ent, color='blue')
+    axs_sys[0].set_title(f'Entrada: {nombre_ent} | E={E_ent:.4f}, P={P_ent:.4f}')
+
+    axs_sys[1].plot(t_ht, senal_ht, color='green')
+    axs_sys[1].set_title(f'Respuesta al Impulso: {nombre_ht} | E={E_ht:.4f}, P={P_ht:.4f}')
+
+    axs_sys[2].plot(t_sal, senal_sal, color='purple')
+    axs_sys[2].set_title(f'Salida | E={E_sal:.4f}, P={P_sal:.4f}')
+
+    for ax in axs_sys:
+        ax.grid(True)
+
+    plt.tight_layout()
+    
+    nombre_archivo = f"conv_{nombre_ent}_{nombre_ht}.pdf".replace(" ", "_")
+    fig_sys.savefig(carpeta_figuras / nombre_archivo, bbox_inches="tight")
 
 # senales periodicas 
 
@@ -80,42 +109,6 @@ for i, (nombre, senal) in enumerate(respuestas_impulso.items()):
 
 plt.tight_layout()
 fig2.savefig(carpeta_figuras / "senales_aperiodicas.pdf", bbox_inches="tight")
-
-# funciones auxiliares para metricas y graficos
-
-dt = 1 / fs
-
-def calcular_energia_potencia(senal, dt_val):
-    energia = np.sum(np.abs(senal)**2) * dt_val
-    duracion = len(senal) * dt_val
-    potencia = energia / duracion if duracion > 0 else 0
-    return energia, potencia
-
-def visualizar_sistema(nombre_ent, senal_ent, nombre_ht, senal_ht, senal_sal, t_ent, t_ht, t_sal):
-    E_ent, P_ent = calcular_energia_potencia(senal_ent, dt)
-    E_ht, P_ht = calcular_energia_potencia(senal_ht, dt)
-    E_sal, P_sal = calcular_energia_potencia(senal_sal, dt)
-
-    fig_sys, axs_sys = plt.subplots(3, 1, figsize=(10, 8))
-   
-    fig_sys.suptitle(f'Sistema LTI: {nombre_ent} * {nombre_ht}', fontsize=12)
-
-    axs_sys[0].plot(t_ent, senal_ent, color='blue')
-    axs_sys[0].set_title(f'Entrada: {nombre_ent} | E={E_ent:.4f}, P={P_ent:.4f}')
-
-    axs_sys[1].plot(t_ht, senal_ht, color='green')
-    axs_sys[1].set_title(f'Respuesta al Impulso: {nombre_ht} | E={E_ht:.4f}, P={P_ht:.4f}')
-
-    axs_sys[2].plot(t_sal, senal_sal, color='purple')
-    axs_sys[2].set_title(f'Salida | E={E_sal:.4f}, P={P_sal:.4f}')
-
-    for ax in axs_sys:
-        ax.grid(True)
-
-    plt.tight_layout()
-    
-    nombre_archivo = f"conv_{nombre_ent}_{nombre_ht}.pdf".replace(" ", "_")
-    fig_sys.savefig(carpeta_figuras / nombre_archivo, bbox_inches="tight")
 
 
 # convolucion de senales periodicas y aperiodicas 
