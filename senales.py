@@ -7,7 +7,7 @@ from pathlib import Path
 carpeta_figuras = Path("figuras")
 carpeta_figuras.mkdir(exist_ok=True)
 
-# parámetros globales y funciones auxiliares
+# parametros globales y funciones auxiliares
 fs = 1000  # frecuencia de muestreo (Hz)
 t = np.arange(-2, 2, 1/fs)  # vector de tiempo de -2 a 2 segundos
 dt = 1 / fs
@@ -19,7 +19,7 @@ def calcular_energia_potencia(senal, dt_val):
     potencia = energia / duracion if duracion > 0 else 0
     return energia, potencia
 
-# --- 1. senales periodicas ---
+# senales periodicas 
 
 senoidal = np.sin(2 * np.pi * frec * t)
 cuadrada = signal.square(2 * np.pi * frec * t)
@@ -45,7 +45,7 @@ for i, (nombre, senal) in enumerate(senales_periodicas.items()):
 plt.tight_layout()
 fig.savefig(carpeta_figuras / "señales_periodicas.pdf", bbox_inches="tight")
 
-# --- 2. senales aperiodicas ---
+# senales aperiodicas
     
 u_t = np.heaviside(t, 1)
 u_t_menos_1 = np.heaviside(t - 1, 1)
@@ -81,7 +81,7 @@ for i, (nombre, senal) in enumerate(respuestas_impulso.items()):
 plt.tight_layout()
 fig2.savefig(carpeta_figuras / "senales_aperiodicas.pdf", bbox_inches="tight")
 
-# funciones auxiliares para métricas y gráficos
+# funciones auxiliares para metricas y graficos
 
 dt = 1 / fs
 
@@ -97,7 +97,7 @@ def visualizar_sistema(nombre_ent, senal_ent, nombre_ht, senal_ht, senal_sal, t_
     E_sal, P_sal = calcular_energia_potencia(senal_sal, dt)
 
     fig_sys, axs_sys = plt.subplots(3, 1, figsize=(10, 8))
-    # Se corrigió el error de salto de línea en el string
+   
     fig_sys.suptitle(f'Sistema LTI: {nombre_ent} * {nombre_ht}', fontsize=12)
 
     axs_sys[0].plot(t_ent, senal_ent, color='blue')
@@ -114,7 +114,6 @@ def visualizar_sistema(nombre_ent, senal_ent, nombre_ht, senal_ht, senal_sal, t_
 
     plt.tight_layout()
     
-    # Generar nombre de archivo dinámico limpiando los espacios
     nombre_archivo = f"conv_{nombre_ent}_{nombre_ht}.pdf".replace(" ", "_")
     fig_sys.savefig(carpeta_figuras / nombre_archivo, bbox_inches="tight")
 
